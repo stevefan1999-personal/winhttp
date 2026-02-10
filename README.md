@@ -139,11 +139,10 @@ fn echo(session: &Session) -> windows::core::Result<()> {
     let request = conn
         .request("GET", "/.ws")
         .secure()
-        .header("Upgrade", "websocket")
-        .header("Connection", "Upgrade")
-        .header("Sec-WebSocket-Key", "dGhlIHNhbXBsZSBub25jZQ==")
-        .header("Sec-WebSocket-Version", "13")
         .build()?;
+
+    // Tell WinHTTP to perform the WebSocket upgrade handshake.
+    request.set_option(WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET, &[])?;
 
     request.send()?;
     request.receive_response()?;
