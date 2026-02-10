@@ -33,6 +33,17 @@ jobs:
       - name: Run doc-tests
         run: cargo test --workspace --all-features --doc
 
+      - name: Run examples
+        run: |
+          cargo run -p example-sync
+          cargo run -p example-tokio
+          cargo run -p example-smol
+          cargo run --example features
+          cargo run --example async_get --features async
+          cargo run --example client_helpers --features async
+          cargo run --example async_json --features "async json"
+          cargo run --example websocket --features "websocket async"
+
   clippy:
     name: Clippy
     runs-on: windows-latest
