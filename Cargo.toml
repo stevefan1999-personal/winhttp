@@ -3,6 +3,10 @@ name = "winhttp"
 version = "0.1.0"
 edition = "2024"
 rust-version = "1.85"
+description = "Safe, ergonomic Rust bindings for the Windows WinHTTP API"
+license = "MIT"
+repository = "https://github.com/stevefan1999-personal/winhttp"
+homepage = "https://github.com/stevefan1999-personal/winhttp"
 
 [dependencies]
 windows = { version = "0.62", features = [
