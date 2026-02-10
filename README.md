@@ -1,5 +1,10 @@
 # winhttp
 
+[![Crates.io](https://img.shields.io/crates/v/winhttp)](https://crates.io/crates/winhttp)
+[![docs.rs](https://img.shields.io/docsrs/winhttp)](https://docs.rs/winhttp)
+[![CI](https://img.shields.io/github/actions/workflow/status/stevefan1999-personal/winhttp/ci.yml?branch=master&label=CI)](https://github.com/stevefan1999-personal/winhttp/actions)
+[![License: MIT](https://img.shields.io/crates/l/winhttp)](https://github.com/stevefan1999-personal/winhttp/blob/master/LICENSE)
+
 Safe, ergonomic Rust bindings for the Windows WinHTTP API.
 
 This crate lets you make HTTP requests on Windows without pulling in a large third-party HTTP stack. It talks directly to the operating system through WinHTTP, so your binaries stay small and you get automatic access to system proxy settings, TLS, and HTTP/2 for free.

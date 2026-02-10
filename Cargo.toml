@@ -8,6 +8,11 @@ license = "MIT"
 repository = "https://github.com/stevefan1999-personal/winhttp"
 homepage = "https://github.com/stevefan1999-personal/winhttp"
 
+[package.metadata.docs.rs]
+all-features = true
+targets = ["x86_64-pc-windows-msvc"]
+rustdoc-args = ["--cfg", "docsrs"]
+
 [dependencies]
 windows = { version = "0.62", features = [
     "Win32",

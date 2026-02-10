@@ -1,3 +1,4 @@
+#![cfg_attr(docsrs, feature(doc_auto_cfg))]
 //! # winhttp
 //!
 //! Safe, ergonomic Rust bindings for the Windows WinHTTP API.
