@@ -10,7 +10,7 @@ use windows::core::{Error, Result};
 
 // Status Callback
 
-impl<'conn> Request<'conn> {
+impl Request<'_> {
     /// Sets a status callback function for asynchronous operations
     ///
     /// Calls `WinHttpSetStatusCallback` to register a callback function that receives

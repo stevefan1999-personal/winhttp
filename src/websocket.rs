@@ -8,7 +8,7 @@ pub struct WebSocket {
 }
 
 impl WebSocket {
-    pub fn from_upgrade<'conn>(request: Request<'conn>) -> Result<Self> {
+    pub fn from_upgrade(request: Request<'_>) -> Result<Self> {
         let request = ManuallyDrop::new(request);
         let request_raw = request.handle.as_raw();
 

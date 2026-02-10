@@ -768,7 +768,7 @@ impl<'conn> Request<'conn> {
     }
 }
 
-impl<'session> Connection<'session> {
+impl Connection<'_> {
     pub fn request<'c>(&'c self, method: &str, path: &str) -> RequestBuilder<'c> {
         RequestBuilder::new(self, method, path)
     }

@@ -231,7 +231,7 @@ fn test_sync_ws_unicode_text() {
     let ws = require_sync_ws!();
 
     // Send Unicode text message
-    let message = "Hello ä¸–ç•Œ ðŸŒ Ù…Ø±Ø­Ø¨Ø§";
+    let message = "Hello ä¸–ç•Œ ðŸŒ Ù…Ø±Ø\u{AD}Ø¨Ø§";
     ws.send_text(message).expect("send unicode text message");
 
     // Receive echo

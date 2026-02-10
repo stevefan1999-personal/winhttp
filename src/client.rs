@@ -109,7 +109,7 @@ impl Body {
         let bytes = serde_json::to_vec(value).map_err(|err| {
             windows::core::Error::new(
                 windows::Win32::Foundation::E_FAIL,
-                &format!("JSON serialization failed: {err}"),
+                format!("JSON serialization failed: {err}"),
             )
         })?;
         Ok(Self {
@@ -389,7 +389,7 @@ pub struct RequestHelper<'c> {
     body: Option<Body>,
 }
 
-impl<'c> RequestHelper<'c> {
+impl RequestHelper<'_> {
     /// Add a header to this request.
     #[must_use]
     pub fn header(mut self, name: impl Into<String>, value: impl Into<String>) -> Self {

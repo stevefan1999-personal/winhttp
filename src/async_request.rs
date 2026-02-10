@@ -333,7 +333,7 @@ pub struct ReadAllFuture<'conn> {
     state: ReadState,
 }
 
-impl<'conn> Future for ReadAllFuture<'conn> {
+impl Future for ReadAllFuture<'_> {
     type Output = Result<Vec<u8>>;
 
     fn poll(mut self: Pin<&mut Self>, cx: &mut Context<'_>) -> Poll<Self::Output> {
