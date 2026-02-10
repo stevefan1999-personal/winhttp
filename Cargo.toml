@@ -1,0 +1,64 @@
+[package]
+name = "winhttp"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+
+[dependencies]
+windows = { version = "0.62", features = [
+    "Win32",
+    "Win32_Networking_WinHttp",
+    "Win32_Foundation",
+    "Win32_Networking_WinSock",
+] }
+crossfire = { version = "3", optional = true }
+parking_lot = { version = "0.12", optional = true }
+futures-core = { version = "0.3", optional = true }
+serde = { version = "1", optional = true }
+serde_json = { version = "1", optional = true }
+
+[features]
+default = []
+async = ["crossfire", "parking_lot", "futures-core"]
+json = ["serde", "serde_json"]
+websocket = []
+
+[dev-dependencies]
+pollster = "0.4"
+smol = "2"
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[[example]]
+name = "async_get"
+required-features = ["async"]
+
+[[example]]
+name = "features"
+
+[[example]]
+name = "client_helpers"
+required-features = ["async"]
+
+[[example]]
+name = "async_json"
+required-features = ["async", "json"]
+
+[[example]]
+name = "websocket"
+required-features = ["websocket"]
+
+[workspace]
+members = [
+    "example-sync",
+    "example-tokio",
+    "example-smol",
+]
+
+[profile.release]
+strip = true  # Automatically strip symbols from the binary.
+opt-level = "s"  # Optimize for size.
+lto = true
+codegen-units = 1
+

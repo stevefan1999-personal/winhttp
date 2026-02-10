@@ -1,0 +1,9 @@
+[package]
+name = "example-tokio"
+version = "0.0.0"
+edition = "2024"
+rust-version = "1.85"
+
+[dependencies]
+winhttp = { version = "0.1.0", path = "..", features = ["async"] }
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros"] }

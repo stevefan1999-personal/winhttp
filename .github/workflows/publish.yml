@@ -1,0 +1,85 @@
+name: Publish
+
+on:
+  release:
+    types: [published]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  publish:
+    name: Publish to crates.io
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.85"
+
+      - name: Extract tag version
+        id: tag
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          # Strip leading 'v' if present (v0.1.0 -> 0.1.0)
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Tag: $TAG -> Version: $VERSION"
+
+      - name: Read crate version from Cargo.toml
+        id: crate
+        shell: bash
+        run: |
+          VERSION=$(cargo metadata --format-version=1 --no-deps \
+            | python -c "import sys,json; pkgs=json.load(sys.stdin)['packages']; print(next(p['version'] for p in pkgs if p['name']=='winhttp'))")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Cargo.toml version: $VERSION"
+
+      - name: Verify tag matches Cargo.toml version
+        shell: bash
+        run: |
+          if [ "${{ steps.tag.outputs.version }}" != "${{ steps.crate.outputs.version }}" ]; then
+            echo "::error::Tag version (${{ steps.tag.outputs.version }}) does not match Cargo.toml version (${{ steps.crate.outputs.version }})"
+            exit 1
+          fi
+          echo "✓ Tag matches Cargo.toml version: ${{ steps.crate.outputs.version }}"
+
+      - name: Check crates.io for duplicate version
+        shell: bash
+        run: |
+          CRATE="winhttp"
+          VERSION="${{ steps.crate.outputs.version }}"
+
+          # Query crates.io API — returns 200 even for missing crates, so check the response
+          HTTP_CODE=$(curl -s -o /tmp/crate_response.json -w "%{http_code}" \
+            "https://crates.io/api/v1/crates/${CRATE}")
+
+          if [ "$HTTP_CODE" = "200" ]; then
+            # Check if this exact version already exists
+            EXISTING=$(python -c "
+          import json, sys
+          data = json.load(open('/tmp/crate_response.json'))
+          versions = [v['num'] for v in data.get('versions', [])]
+          if '${VERSION}' in versions:
+              print('exists')
+          else:
+              print('new')
+          ")
+            if [ "$EXISTING" = "exists" ]; then
+              echo "::error::Version ${VERSION} of ${CRATE} already exists on crates.io"
+              exit 1
+            fi
+            echo "✓ Version ${VERSION} is not yet published"
+          else
+            echo "Crate not found on crates.io (first publish). Proceeding."
+          fi
+
+      - name: Publish dry-run
+        run: cargo publish --dry-run
+
+      - name: Publish to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: cargo publish
