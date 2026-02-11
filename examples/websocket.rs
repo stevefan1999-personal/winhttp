@@ -25,10 +25,7 @@ fn try_connect_sync() -> windows::core::Result<WebSocket> {
     let session = Session::new()?;
     let connection = session.connect(ECHO_HOST, ECHO_PORT)?;
 
-    let request = connection
-        .request("GET", ECHO_PATH)
-        .secure()
-        .build()?;
+    let request = connection.request("GET", ECHO_PATH).secure().build()?;
 
     // Tell WinHTTP to perform the WebSocket upgrade handshake.
     request.set_option(WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET, &[])?;
@@ -51,10 +48,7 @@ async fn try_connect_async() -> windows::core::Result<AsyncWebSocket> {
     let session = Session::new_async()?;
     let connection = session.connect(ECHO_HOST, ECHO_PORT)?;
 
-    let request = connection
-        .request("GET", ECHO_PATH)
-        .secure()
-        .build()?;
+    let request = connection.request("GET", ECHO_PATH).secure().build()?;
 
     request.set_option(WINHTTP_OPTION_UPGRADE_TO_WEB_SOCKET, &[])?;
 
