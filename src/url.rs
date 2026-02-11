@@ -14,10 +14,15 @@ pub struct UrlComponents {
 pub fn crack_url(url: &str) -> Result<UrlComponents> {
     let url_wide: Vec<u16> = url.encode_utf16().chain(std::iter::once(0)).collect();
 
+    // Size buffers relative to the input URL length to handle very long paths
+    // (e.g. Tor microdescriptor batch URLs with 90+ base64 hashes).
+    let url_len = url.len();
+    let path_buf_len = (url_len + 1).max(2048);
+
     let mut scheme_buf = vec![0u16; 256];
     let mut host_buf = vec![0u16; 256];
-    let mut path_buf = vec![0u16; 2048];
-    let mut extra_buf = vec![0u16; 2048];
+    let mut path_buf = vec![0u16; path_buf_len];
+    let mut extra_buf = vec![0u16; path_buf_len];
 
     let mut components = URL_COMPONENTS {
         dwStructSize: std::mem::size_of::<URL_COMPONENTS>() as u32,
